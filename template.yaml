@@ -2,6 +2,15 @@ AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: Chicken Wing Recipe Generator
 
+Globals:
+
+  Function:
+    Runtime: python3.8
+    Handler: index.lambda_handler
+    Environment:
+      Variables:
+        TABLE: !Ref Table
+
 Resources:
 
   Table:
@@ -32,7 +41,55 @@ Resources:
           Projection:
             ProjectionType: ALL
 
+  Api:
+    Type: AWS::Serverless::HttpApi
+
+  ApiComponents:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/components
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref Table
+      Events:
+        PostCook:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api
+            Method: post
+            Path: /components/cooking-methods
+        PostSauce:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api
+            Method: post
+            Path: /components/sauces
+        PostDip:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api
+            Method: post
+            Path: /components/dips
+
+  ApiRecipes:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/recipes
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref Table
+      Events:
+        Get:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api
+            Method: get
+            Path: /recipes
+
 Outputs:
 
   TableName:
     Value: !Ref Table
+
+  ApiUrl:
+    Value: !Sub https://${Api}.execute-api.${AWS::Region}.${AWS::URLSuffix}
