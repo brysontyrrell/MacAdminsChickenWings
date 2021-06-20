@@ -4,8 +4,17 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+jsonschema = "*"
 
 [dev-packages]
+boto3 = "*"
+black = "*"
+cfn-lint = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
