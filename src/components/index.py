@@ -10,23 +10,42 @@ dynamodb_table = boto3.resource("dynamodb").Table(os.getenv("TABLE"))
 COOKING_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["type", "method", "temperature", "time"],
+    "required": [
+        "name",
+        "type",
+        "is_battered",
+        "use_sauce",
+        "method",
+        "temperature",
+        "ingredients",
+        "instructions",
+    ],
     "properties": {
+        "name": {"type": "string"},
         "type": {"type": "string", "enum": ["traditional", "boneless"]},
+        "is_battered": {"type": "boolean"},
+        "use_sauce": {"type": "boolean"},
         "method": {"type": "string"},
         "temperature": {"type": "number"},
-        "time": {"type": "number"},
         "ingredients": {"type": "array", "items": {"type": "string"}, "minItems": 1},
         "instructions": {"type": "array", "items": {"type": "string", "minItems": 1}},
     },
     "allOf": [
         {
             "if": {"properties": {"type": {"const": "traditional"}}},
-            "then": {"properties": {"type": {"enum": ["baked", "fried", "smoked"]}}},
+            "then": {
+                "properties": {"method": {"enum": ["baked", "fried", "smoked"]}},
+                "is_battered": {"const": False},
+            },
         },
         {
             "if": {"properties": {"type": {"const": "boneless"}}},
-            "then": {"properties": {"type": {"enum": ["baked", "fried"]}}},
+            "then": {
+                "properties": {
+                    "method": {"enum": ["baked", "fried"]},
+                    "is_battered": {"const": True},
+                },
+            },
         },
     ],
 }
