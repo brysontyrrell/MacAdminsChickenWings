@@ -22,27 +22,11 @@ Resources:
           AttributeType: S
         - AttributeName: sk
           AttributeType: S
-        - AttributeName: gsi1pk
-          AttributeType: S
-        - AttributeName: gsi1sk
-          AttributeType: S
       KeySchema:
         - AttributeName: pk
           KeyType: HASH
         - AttributeName: sk
           KeyType: RANGE
-      GlobalSecondaryIndexes:
-        - IndexName: GSI1
-          KeySchema:
-            - AttributeName: gsi1pk
-              KeyType: HASH
-            - AttributeName: gsi1sk
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-
-  Api:
-    Type: AWS::Serverless::HttpApi
 
   ApiComponents:
     Type: AWS::Serverless::Function
@@ -55,19 +39,16 @@ Resources:
         PostCook:
           Type: HttpApi
           Properties:
-            ApiId: !Ref Api
             Method: post
             Path: /components/cooking-methods
         PostSauce:
           Type: HttpApi
           Properties:
-            ApiId: !Ref Api
             Method: post
             Path: /components/sauces
         PostDip:
           Type: HttpApi
           Properties:
-            ApiId: !Ref Api
             Method: post
             Path: /components/dips
 
@@ -82,7 +63,6 @@ Resources:
         Get:
           Type: HttpApi
           Properties:
-            ApiId: !Ref Api
             Method: get
             Path: /recipes
 
@@ -92,4 +72,4 @@ Outputs:
     Value: !Ref Table
 
   ApiUrl:
-    Value: !Sub https://${Api}.execute-api.${AWS::Region}.${AWS::URLSuffix}
+    Value: !Sub https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}
