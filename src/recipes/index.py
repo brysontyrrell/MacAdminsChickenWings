@@ -26,7 +26,9 @@ def random_component_by_key(component):
     results = dynamodb_table.query(
         KeyConditionExpression=Key("pk").eq(f"C#{component}"), ProjectionExpression="sk"
     )
+
     random_selection = random.choice(results["Items"])
+
     return dynamodb_table.get_item(
         Key={"pk": f"C#{component}", "sk": random_selection["sk"]},
         ProjectionExpression="#d",
@@ -35,7 +37,7 @@ def random_component_by_key(component):
 
 
 def random_component_by_value(component):
-    char = "".join(random.sample("abcdef1234567890", 3))
+    char = "".join(random.sample("abcdef1234567890", 8))
 
     def _result(sk):
         return dynamodb_table.query(
