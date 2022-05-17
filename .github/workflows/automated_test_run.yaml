@@ -25,7 +25,7 @@ jobs:
           role-duration-seconds: 900
 
       - name: Zip Repository
-        run: zip -r main.zip .
+        run: zip -r ./main.zip .
 
       - name: Upload to S3
-        run: aws s3 cp main.zip ${{secrets.SD_S3_PATH}}
+        run: aws s3 cp ./main.zip ${{secrets.SD_S3_PATH}}
