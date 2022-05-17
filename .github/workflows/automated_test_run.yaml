@@ -20,7 +20,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: us-east-2
-          role-to-assume: ${{ secrets.SD_IAM_ROLE }}
+          role-to-assume: arn:aws:iam::880285067396:role/bryson-sam-deployer-PipelineRole-bryson-macadminschickenwings-ma
           role-session-name: SamDeployerAction
           role-duration-seconds: 900
 
