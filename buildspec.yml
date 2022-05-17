@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+  build:
+    commands:
+      - sam build
+artifacts:
+  type: zip
+  files:
+    - '**/*'

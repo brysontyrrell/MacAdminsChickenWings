@@ -1,0 +1,31 @@
+name: Automated Unit Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  send-to-pipeline:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-2
+          role-to-assume: ${{secrets.SD_IAM_ROLE}}
+          role-session-name: SamDeployerAction
+          role-duration-seconds: 900
+
+      - name: Zip Repository
+        run: zip -r main.zip .
+
+      - name: Upload to S3
+        run: aws s3 cp main.zip ${{secrets.SD_S3_PATH}}
