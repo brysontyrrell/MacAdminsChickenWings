@@ -28,4 +28,4 @@ jobs:
         run: zip -r ./main.zip .
 
       - name: Upload to S3
-        run: aws s3 cp ./main.zip S3://bryson-sam-deployer-resourc-pipelinessourcebucket-1phgmtj5drzbw/sources/7m0d77i73blaol4t4e5elpmqsn/brysontyrrell-macadminschickenwings/main.zip
+        run: aws s3 cp ./main.zip s3://bryson-sam-deployer-resourc-pipelinessourcebucket-1phgmtj5drzbw/sources/7m0d77i73blaol4t4e5elpmqsn/brysontyrrell-macadminschickenwings/main.zip
